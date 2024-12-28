@@ -1,6 +1,8 @@
 package com.sky.mapper;
 
 import com.sky.entity.Employee;
+
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -15,5 +17,15 @@ public interface EmployeeMapper {
      */
     @Select("select * from employee where username = #{username}") // 用Select注解指定SQL语句，也可以用XML来进行SQL语句的编写，这里是一个简单的例子。
     Employee getByUsername(String username);
+
+    /**
+     * 新建一个员工的信息，直接基于注解来写SQL语句
+     * 
+     * @param employee
+     */
+    @Insert("insert into employee(name, username,password,phone,sex,id_number,create_time,update_time,create_user,update_user)"
+            + "values"
+            + "(#{name},#{username},#{password},#{phone},#{sex},#{idNumber},#{createTime},#{updateTime},#{createUser},#{updateUser})")
+    void insert(Employee employee);
 
 }

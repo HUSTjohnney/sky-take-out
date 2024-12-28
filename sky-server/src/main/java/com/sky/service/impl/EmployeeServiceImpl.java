@@ -1,7 +1,11 @@
 package com.sky.service.impl;
 
+import com.fasterxml.jackson.databind.JsonSerializable.Base;
 import com.sky.constant.MessageConstant;
+import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
@@ -9,11 +13,16 @@ import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.service.EmployeeService;
+
+import java.sql.Date;
+import java.time.LocalDateTime;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-@Service
+@Service // 用Service注解标记这是在业务逻辑层的类
 public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
@@ -53,6 +62,43 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         // 3、返回实体对象
         return employee;
+    }
+
+    /**
+     * 新建员工
+     *
+     * @param employeeDTO
+     */
+    @Override
+    public void save(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        // 对象属性拷贝
+        BeanUtils.copyProperties(employeeDTO, employee);
+
+        // 对密码进行MD5加密，默认密码：123456，基于常量类PasswordConstant
+        employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
+
+        // 设置账号状态，默认启用为1，禁用为0
+        employee.setStatus(StatusConstant.ENABLE);
+
+        // 设置创建时间
+        employee.setCreateTime(LocalDateTime.now());
+
+        // 设置更新时间
+        employee.setUpdateTime(LocalDateTime.now());
+
+        // 设置创建人ID和设置更新人ID
+        Long Userid = BaseContext.getCurrentId();
+        employee.setCreateUser(Userid);
+        employee.setUpdateUser(Userid);
+
+        BaseContext.removeCurrentId();// 清除当前线程的数据
+
+        // 保存员工，调用Mapper接口的方法到数据库
+        employeeMapper.insert(employee);
+
+        // 当前线程的ID
+        //System.out.println("当前线程ID：" + Thread.currentThread().getId());
     }
 
 }

@@ -1,6 +1,7 @@
 package com.sky.controller.admin;
 
 import com.sky.constant.JwtClaimsConstant;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.properties.JwtProperties;
@@ -75,6 +76,19 @@ public class EmployeeController {
     @PostMapping("/logout")
     @ApiOperation("员工退出")
     public Result<String> logout() {
+        return Result.success();
+    }
+
+    /**
+     * 
+     * @param employeeDTO
+     * @return
+     */
+    @PostMapping
+    @ApiOperation("新增员工") // Swagger接口文档的注解。
+    public Result save(@RequestBody EmployeeDTO employeeDTO) { // @RequestBody的意思是从请求体中获取数据，而不是从url中获取数据。
+        log.info("新增员工：{}", employeeDTO); // {}是占位符，表示后面的参数会替换这个占位符。
+        employeeService.save(employeeDTO);
         return Result.success();
     }
 

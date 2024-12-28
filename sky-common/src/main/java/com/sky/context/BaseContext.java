@@ -1,5 +1,8 @@
 package com.sky.context;
 
+/**
+ * 用于存储当前线程数据的类
+ */
 public class BaseContext {
 
     public static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
