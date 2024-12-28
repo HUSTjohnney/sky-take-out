@@ -4,15 +4,16 @@ import com.sky.entity.Employee;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
-@Mapper
+@Mapper // 用Mapper注解标记这是一个MyBatis的Mapper接口
 public interface EmployeeMapper {
 
     /**
      * 根据用户名查询员工
+     * 
      * @param username
      * @return
      */
-    @Select("select * from employee where username = #{username}")
+    @Select("select * from employee where username = #{username}") // 用Select注解指定SQL语句，也可以用XML来进行SQL语句的编写，这里是一个简单的例子。
     Employee getByUsername(String username);
 
 }
