@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -84,7 +85,7 @@ public class EmployeeController {
 
     /**
      * 
-     * @param employeeDTO
+     * @param employeeDTO，POST请求，参数在请求体中传递。
      * @return
      */
     @PostMapping
@@ -107,6 +108,21 @@ public class EmployeeController {
         log.info("员工分页查询：{}", employeePageQueryDTO);
         PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
+    }
+
+    /**
+     * 启用或禁用员工，用的Post请求，参数是在请求体中传递的。状态是1表示启用，0表示禁用，在url中传递。id是员工的主键值，通过形参传递。
+     * 
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @ApiOperation("启用或禁用员工") // Swagger接口文档的注解。
+    public Result startorStop(@PathVariable Integer status, Long id) {
+        log.info("启用或禁用员工账号：status={}, id={}", status, id);
+        employeeService.startorStop(status, id);
+        return Result.success();
     }
 
 }

@@ -7,6 +7,7 @@ import com.sky.entity.Employee;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper // 用Mapper注解标记这是一个MyBatis的Mapper接口
 public interface EmployeeMapper {
@@ -37,5 +38,13 @@ public interface EmployeeMapper {
      * @return
      */
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
+
+
+    /**
+     * 更新员工信息
+     * 
+     * @param employee
+     */
+    void update(Employee employee);
 
 }
